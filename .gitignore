@@ -1,2 +1,3 @@
 material/
 lib/zappa.js
+.*.sw[op]
