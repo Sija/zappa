@@ -4,8 +4,8 @@ puts = console.log
 {inspect} = require 'sys'
 coffee = null
 
-{App} = require './app'
-{scoped} = require './utils'
+{App} = require './zappa/app'
+{scoped} = require './zappa/utils'
 
 class Zappa
   constructor: ->
