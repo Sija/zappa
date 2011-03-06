@@ -66,12 +66,16 @@ class MessageHandler
     result = coffeekup.render template, opts
 
     if typeof options.apply is 'string'
-      postrender = @postrenders[options.apply]
+      options.apply = [options.apply]
+
+    if options.apply?
       jquery = jquery || require 'jquery'
-      body = jquery 'body'
-      body.empty().html result
-      postrender opts.context, jquery.extend @defs, { $: jquery }
-      result = body.html()
+      for name in options.apply
+        postrender = @postrenders[name]
+        body = jquery 'body'
+        body.empty().html result
+        postrender opts.context, jquery.extend @defs, { $: jquery }
+        result = body.html()
 
     if options.layout
       layout = @layouts[options.layout]
