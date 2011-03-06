@@ -46,15 +46,16 @@ extend = (target, objects..., deep) ->
 
   for object in objects
     for key, copy of object
-      if Object::hasOwnProperty.call object, key
+      continue unless Object::hasOwnProperty.call object, key
+
+      if deep and (typeof copy is 'object' or typeof copy is 'array')
         src = target[key]
-        if deep and (typeof copy is 'object' or typeof copy is 'array')
-          if typeof copy is 'array'
-            clone = (typeof src is 'array' and src) or []
-          else
-            clone = (typeof src is 'object' and src) or {}
-          copy = extend clone, copy, deep
-        target[key] = copy
+        if typeof copy is 'array'
+          clone = (typeof src is 'array' and src) or []
+        else
+          clone = (typeof src is 'object' and src) or {}
+        copy = extend clone, copy, deep
+      target[key] = copy
   target
 
 exports[func] = eval func for func in 'build_msg|parse_msg|scoped|publish_api|extend'.split '|'
