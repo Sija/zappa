@@ -15,7 +15,7 @@ class Zappa
     @current_app = null
 
     @locals =
-      app: (name,server) => @app name, server
+      app: (name, server) => @app name, server
       include: (path) => @include path
       require: require
       global: global
@@ -39,7 +39,7 @@ class Zappa
   define_with: (code) ->
     scoped(code)(@context, @locals)
 
-  ensure_app: (name,server) ->
+  ensure_app: (name, server) ->
     @apps[name] = new App(name, server) unless @apps[name]?
     @current_app = @apps[name] unless @current_app?
 
@@ -78,23 +78,26 @@ class Zappa
 class App
   constructor: (@name, configure) ->
     @name ?= 'default'
-    @port = 5678
+    @config =
+      port: 5678
+      static_dir: "#{process.cwd()}/public"
+      session:
+        secret: 'to-do'
 
     @http_server = express.createServer()
-    @http_server.use express.staticProvider("#{process.cwd()}/public")
     @http_server.use express.bodyDecoder()
     @http_server.use express.cookieDecoder()
-    # TODO: Make the secret configurable.
-    @http_server.use express.session(secret: 'hackme')
+    @http_server.use express.session @config.session
+    @http_server.use express.staticProvider @config.static_dir
 
     if coffeekup?
       @http_server.register '.coffee', coffeekup
       @http_server.set 'view engine', 'coffee'
 
     @http_server.configure =>
-      configure @http_server if configure?
+      configure @http_server, @config if configure?
 
-    # App-level vars, exposed to handlers as [app]."
+    # App-level vars, exposed to handlers as [app].
     @vars = {}
 
     @defs = {}
@@ -123,8 +126,8 @@ class App
 
   start: (options) ->
     options ?= {}
-    @port = options.port if options.port
-    @hostname = options.hostname if options.hostname
+    @config.port = options.port if options.port
+    @config.hostname = options.hostname if options.hostname
 
     if io?
       @ws_server = io.listen @http_server, {log: ->}
@@ -135,16 +138,16 @@ class App
           msg = parse_msg raw_msg
           @msg_handlers[msg.title]?.execute client, msg.params
 
-    if @hostname? then @http_server.listen @port, @hostname
-    else @http_server.listen @port
+    if @config.hostname? then @http_server.listen @config.port, @config.hostname
+    else @http_server.listen @config.port
 
-    puts "App \"#{@name}\" listening on #{if @hostname? then @hostname + ':' else '*:'}#{@port}..."
+    puts "App \"#{@name}\" listening on #{@config.hostname or '*'}:#{@config.port}..."
     @http_server
 
-  get: -> @route 'get', arguments
+  get:  -> @route 'get',  arguments
   post: -> @route 'post', arguments
-  put: -> @route 'put', arguments
-  del: -> @route 'del', arguments
+  put:  -> @route 'put',  arguments
+  del:  -> @route 'del',  arguments
   route: (verb, args) ->
     if typeof args[0] isnt 'object'
       @register_route verb, args[0], args[1]
@@ -207,7 +210,7 @@ class App
       do (k, v) =>
         code = ";(#{v})();"
         @http_server.get "/#{k}.js", (req, res) ->
-          res.contentType 'bla.js'
+          res.contentType "#{k}.js"
           res.send code
 
   style: (arg) ->
@@ -215,7 +218,7 @@ class App
     for k, v of pairs
       do (k, v) =>
         @http_server.get "/#{k}.css", (req, res) ->
-          res.contentType 'bla.css'
+          res.contentType "#{k}.css"
           res.send v
 
 class RequestHandler
