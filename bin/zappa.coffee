@@ -2,6 +2,7 @@
 
 zappa = require 'zappa'
 coffee = require 'coffee-script'
+growl = null
 fs = require 'fs'
 path = require 'path'
 puts = console.log
@@ -31,6 +32,7 @@ switches = [
   ['-n', '--hostname [STRING]', 'If omitted, will accept connections to any ipv4 address (INADDR_ANY)']
   ['-c', '--compile', 'Compiles the app(s) to a .js file instead of running them.']
   ['-w', '--watch', 'Keeps watching the file and restarts the app when it changes.']
+  ['-g', '--growl', 'Uses Growl for notifications (if installed)']
 ]
 
 compile = (coffee_path, callback) ->
@@ -53,6 +55,10 @@ remove_watch_option = ->
   i = argv.indexOf('--watch')
   argv.splice(i, 1) if i > -1
 
+roar = (message) ->
+  growl and growl.notify message, title: "Zappa v#{zappa.version}", image: 'javascript'
+  message
+
 spawn_child = ->
   child = spawn 'zappa', argv
   child.stdout.on 'data', (data) ->
@@ -61,13 +67,13 @@ spawn_child = ->
       included = data.match(/^Included file \"(.*\.coffee)\"/)[1]
       watch path.join(path.dirname(file), included) unless included in watching
       watching.push included
-    puts data
+    puts roar data
   child.stderr.on 'data', (data) -> puts String(data)
 
 watch = (file) ->
   fs.watchFile file, { persistent: true, interval: 500 }, (curr, prev) ->
     return if curr.size is prev.size and curr.mtime.getTime() is prev.mtime.getTime()
-    puts 'Changes detected, reloading...'
+    puts roar 'Changes detected, reloading...'
     child.kill() # Infanticide!
     spawn_child()
 
@@ -75,6 +81,9 @@ parser = new OptionParser switches, usage
 options = parser.parse argv
 args = options.arguments
 delete options.arguments
+
+if options.growl
+  growl = try require 'growl'
 
 if options.port
   options.port = if options.port.match /,/ then options.port.split ',' else [options.port]
@@ -90,12 +99,12 @@ else
 
   path.exists file, (exists) ->
     if not exists
-      puts "\"#{file}\" not found."
+      puts roar "File \"#{file}\" was not found."
       process.exit -1
 
     if options.compile
       compile file, (err) ->
-        if err then puts err; process.exit -1
+        if err then puts roar err; process.exit -1
         else process.exit()
     else
       if options.watch
