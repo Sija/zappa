@@ -14,7 +14,7 @@ class Zappa
     @current_app = null
 
     @locals =
-      app: (name, server) => @app name, server
+      app: (name, options) => @app name, options
       include: (path) => @include path
       require: require
       global: global
@@ -27,8 +27,8 @@ class Zappa
           @ensure_app 'default' unless @current_app?
           @current_app[name].apply @current_app, arguments
 
-  app: (name, server) ->
-    @ensure_app name, server
+  app: (name, options) ->
+    @ensure_app name, options
     @current_app = @apps[name]
 
   include: (file) ->
@@ -38,8 +38,8 @@ class Zappa
   define_with: (code) ->
     scoped(code)(@context, @locals)
 
-  ensure_app: (name, server) ->
-    @apps[name] = new App(name, server) unless @apps[name]?
+  ensure_app: (name, options) ->
+    @apps[name] = new App(name, options) unless @apps[name]?
     @current_app = @apps[name] unless @current_app?
 
   read_and_compile: (file) ->

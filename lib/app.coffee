@@ -9,13 +9,20 @@ coffeekup = null
 puts = console.log
 
 class App
-  constructor: (@name, configure) ->
+  constructor: (@name, options = {}) ->
     @name ?= 'default'
     @config =
       port: 5678
       static_dir: "#{process.cwd()}/public"
       session:
-        secret: 'to-do'
+        secret: 'change me!'
+
+    if options instanceof Function
+      options = { configure: options }
+    if configure = options.configure
+      delete options.configure
+
+    @config extends options
 
     @http_server = express.createServer()
     @http_server.use express.bodyDecoder()
