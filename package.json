@@ -3,12 +3,13 @@
   "description": "Web development, cut-the-crap style.",
   "version": "0.1.5-pre",
   "author": "Maurice Machado <maurice@bitbending.com>",
-  "contributors": [ 
-    {"name": "Maurice Machado", "email": "maurice@bitbending.com"},
-    {"name": "Nicholas Kinsey", "email": "nicholas.kinsey@feistystudios.com"},
-    {"name": "Jae Kwon", "email": "jae@flywheelnetworks.com"},
-    {"name": "Vladimir Dronnikov", "email": "dronnikov@gmail.com"},
-    {"name": "Isaac Wolkerstorfer", "email": "agnoster@gmail.com"}
+  "contributors": [
+    { "name": "Maurice Machado", "email": "maurice@bitbending.com" },
+    { "name": "Nicholas Kinsey", "email": "nicholas.kinsey@feistystudios.com" },
+    { "name": "Jae Kwon", "email": "jae@flywheelnetworks.com" },
+    { "name": "Vladimir Dronnikov", "email": "dronnikov@gmail.com" },
+    { "name": "Isaac Wolkerstorfer", "email": "agnoster@gmail.com" },
+    { "name": "Sijawusz Pur Rahnama", "email": "sijawusz@gmail.com" }
   ],
   "dependencies": {
     "express": ">= 1.0.1",
