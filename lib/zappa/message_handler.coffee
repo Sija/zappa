@@ -56,6 +56,7 @@ class MessageHandler
     opts = options.options or {} # Options for the templating engine.
     opts.context ?= @context
     opts.context.zappa = partial: @partial
+    opts.context.app = @locals.app
     opts.locals ?= {}
     opts.locals.partial = (template, context) ->
       text ck_options.context.zappa.partial template, context

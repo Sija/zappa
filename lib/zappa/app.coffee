@@ -9,9 +9,9 @@ coffeekup = null
 puts = console.log
 
 class App
-  constructor: (@name, options = {}) ->
+  constructor: (@name, options = {}, vars = {}) ->
     @name ?= 'default'
-    @config =
+    @options =
       port: 5678
       static_dir: "#{process.cwd()}/public"
       session:
@@ -22,23 +22,23 @@ class App
     if configure = options.configure
       delete options.configure
 
-    @config = extend @config, options, true
+    @options = extend @options, options, true
 
     @http_server = express.createServer()
     @http_server.use express.cookieParser()
     @http_server.use express.bodyParser()
-    @http_server.use express.session @config.session if @config.session
-    @http_server.use express.static @config.static_dir if @config.static_dir
+    @http_server.use express.session @options.session if @options.session
+    @http_server.use express.static @options.static_dir if @options.static_dir
 
     if coffeekup?
       @http_server.register '.coffee', coffeekup
       @http_server.set 'view engine', 'coffee'
 
     @http_server.configure =>
-      configure @http_server, @config if configure?
+      configure @http_server, @options if configure?
 
     # App-level vars, exposed to handlers as [app].
-    @vars = {}
+    @vars = vars
 
     @defs = {}
     @helpers = {}
@@ -66,8 +66,8 @@ class App
 
   start: (options) ->
     options ?= {}
-    @config.port = options.port if options.port
-    @config.hostname = options.hostname if options.hostname
+    @options.port = options.port if options.port
+    @options.hostname = options.hostname if options.hostname
 
     if io?
       @ws_server = io.listen @http_server, {log: ->}
@@ -78,10 +78,12 @@ class App
           msg = parse_msg raw_msg
           @msg_handlers[msg.title]?.execute client, msg.params
 
-    if @config.hostname? then @http_server.listen @config.port, @config.hostname
-    else @http_server.listen @config.port
+    if @options.hostname?
+      @http_server.listen @options.port, @options.hostname
+    else
+      @http_server.listen @options.port
 
-    puts "App \"#{@name}\" listening on #{@config.hostname or '*'}:#{@config.port}..."
+    puts "App \"#{@name}\" listening on #{@options.hostname or '*'}:#{@options.port}..."
     @http_server
 
   get:  -> @route 'get',  arguments

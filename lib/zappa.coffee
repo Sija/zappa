@@ -10,11 +10,13 @@ coffee = null
 class Zappa
   constructor: ->
     @context = {}
+    @config = {}
     @apps = {}
     @current_app = null
 
     @locals =
       app: (name, options) => @app name, options
+      config: @config
       include: (path) => @include path
       require: require
       global: global
@@ -39,7 +41,7 @@ class Zappa
     scoped(code)(@context, @locals)
 
   ensure_app: (name, options) ->
-    @apps[name] = new App(name, options) unless @apps[name]?
+    @apps[name] = new App(name, options, @locals) unless @apps[name]?
     @current_app = @apps[name] unless @current_app?
 
   read_and_compile: (file) ->
