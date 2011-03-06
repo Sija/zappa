@@ -25,10 +25,10 @@ class App
     @config extends options
 
     @http_server = express.createServer()
-    @http_server.use express.bodyDecoder()
-    @http_server.use express.cookieDecoder()
+    @http_server.use express.cookieParser()
+    @http_server.use express.bodyParser()
     @http_server.use express.session @config.session if @config.session
-    @http_server.use express.staticProvider @config.static_dir if @config.static_dir
+    @http_server.use express.static @config.static_dir if @config.static_dir
 
     if coffeekup?
       @http_server.register '.coffee', coffeekup
