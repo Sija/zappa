@@ -77,14 +77,14 @@ class RequestHandler
     coffeekup = coffeekup || require 'coffeekup'
     result = coffeekup.render template, opts
 
-    if typeof options.apply is 'string'
-      options.apply = [options.apply]
-
     if options.layout
       layout = @layouts[options.layout]
       layout_opts = extend {}, opts
       layout_opts.context.content = result
       result = coffeekup.render layout, layout_opts
+
+    if typeof options.apply is 'string'
+      options.apply = [options.apply]
 
     if options.apply?
       jquery = jquery || require 'jquery'

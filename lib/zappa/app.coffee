@@ -22,7 +22,7 @@ class App
     if configure = options.configure
       delete options.configure
 
-    @config = extend @config, options
+    @config = extend @config, options, true
 
     @http_server = express.createServer()
     @http_server.use express.cookieParser()
