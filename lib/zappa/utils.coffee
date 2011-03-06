@@ -40,5 +40,11 @@ publish_api = (from, to, methods) ->
       else
         to[name] = from[name]
 
-exports[func] = eval func for func in 'build_msg|parse_msg|scoped|publish_api'.split '|'
+extend = (src, objects...) ->
+  for object in objects
+    for key of object
+      src[key] = object[key] if Object::hasOwnProperty.call object, key
+  src
+
+exports[func] = eval func for func in 'build_msg|parse_msg|scoped|publish_api|extend'.split '|'
 

@@ -1,7 +1,7 @@
 jquery = null
 coffeekup = null
 
-{scoped} = require './utils'
+{scoped, extend} = require './utils'
 puts = console.log
 
 class RequestHandler
@@ -80,6 +80,12 @@ class RequestHandler
     if typeof options.apply is 'string'
       options.apply = [options.apply]
 
+    if options.layout
+      layout = @layouts[options.layout]
+      layout_opts = extend {}, opts
+      layout_opts.context.content = result
+      result = coffeekup.render layout, layout_opts
+
     if options.apply?
       jquery = jquery || require 'jquery'
       for name in options.apply
@@ -88,11 +94,6 @@ class RequestHandler
         body.empty().html result
         postrender opts.context, jquery.extend @defs, { $: jquery }
         result = body.html()
-
-    if options.layout
-      layout = @layouts[options.layout]
-      opts.context.content = result
-      result = coffeekup.render layout, opts
 
     @response.send result
 

@@ -5,7 +5,7 @@ coffeekup = null
 
 {RequestHandler} = require './request_handler'
 {MessageHandler} = require './message_handler'
-{scoped, parse_msg} = require './utils'
+{scoped, parse_msg, extend} = require './utils'
 puts = console.log
 
 class App
@@ -22,7 +22,7 @@ class App
     if configure = options.configure
       delete options.configure
 
-    @config extends options
+    @config = extend @config, options
 
     @http_server = express.createServer()
     @http_server.use express.cookieParser()
