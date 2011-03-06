@@ -38,7 +38,8 @@ compile = (coffee_path, callback) ->
     if err then callback(err)
     else
       js = coffee.compile String(data), bare: yes
-      js = "require('zappa').run(function(){#{js}});"
+      js = ((unless line.match /^\s*$/ then '  ' else '') + line for line in js.split "\n")
+      js = "require('zappa').run(function() {\n#{ js.join "\n" }\n});"
       js_path = path.basename(coffee_path, path.extname(coffee_path)) + '.js'
       dir = path.dirname coffee_path
       js_path = path.join dir, js_path
@@ -64,7 +65,7 @@ spawn_child = ->
   child.stderr.on 'data', (data) -> puts String(data)
 
 watch = (file) ->
-  fs.watchFile file, {persistent: true, interval: 500}, (curr, prev) ->
+  fs.watchFile file, { persistent: true, interval: 500 }, (curr, prev) ->
     return if curr.size is prev.size and curr.mtime.getTime() is prev.mtime.getTime()
     puts 'Changes detected, reloading...'
     child.kill() # Infanticide!
@@ -86,12 +87,12 @@ if args.length is 0
   process.exit()
 else
   file = args[0]
-  
+
   path.exists file, (exists) ->
     if not exists
       puts "\"#{file}\" not found."
       process.exit -1
-    
+
     if options.compile
       compile file, (err) ->
         if err then puts err; process.exit -1
@@ -103,3 +104,4 @@ else
         watch file
       else
         zappa.run_file file, options
+
