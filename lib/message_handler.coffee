@@ -62,12 +62,12 @@ class MessageHandler
 
     template = @app.views[template] if typeof template is 'string'
 
-    coffeekup = require 'coffeekup'
+    coffeekup = coffeekup || require 'coffeekup'
     result = coffeekup.render template, opts
 
     if typeof options.apply is 'string'
       postrender = @postrenders[options.apply]
-      jquery = require 'jquery'
+      jquery = jquery || require 'jquery'
       body = jquery 'body'
       body.empty().html result
       postrender opts.context, jquery.extend @defs, { $: jquery }
@@ -84,7 +84,7 @@ class MessageHandler
 
   partial: (template, context) =>
     template = @app.views[template]
-    coffeekup = require 'coffeekup'
+    coffeekup = coffeekup || require 'coffeekup'
     coffeekup.render template, context: context
 
 exports.MessageHandler = MessageHandler

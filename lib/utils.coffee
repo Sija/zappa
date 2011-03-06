@@ -24,7 +24,7 @@ build_msg = (title, data) ->
 parse_msg = (raw_msg) ->
   obj = JSON.parse(raw_msg)
   for k, v of obj
-    return {title: k, params: v}
+    return { title: k, params: v }
 
 scoped = (code) ->
   code = String(code)

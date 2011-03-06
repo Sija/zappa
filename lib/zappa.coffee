@@ -43,7 +43,7 @@ class Zappa
     @current_app = @apps[name] unless @current_app?
 
   read_and_compile: (file) ->
-    coffee = require 'coffee-script'
+    coffee = coffee || require 'coffee-script'
     code = @read file
     coffee.compile code
 

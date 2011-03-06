@@ -27,8 +27,8 @@ class App
     @http_server = express.createServer()
     @http_server.use express.bodyDecoder()
     @http_server.use express.cookieDecoder()
-    @http_server.use express.session @config.session
-    @http_server.use express.staticProvider @config.static_dir
+    @http_server.use express.session @config.session if @config.session
+    @http_server.use express.staticProvider @config.static_dir if @config.static_dir
 
     if coffeekup?
       @http_server.register '.coffee', coffeekup
@@ -115,37 +115,37 @@ class App
 
   helper: (pairs) ->
     for k, v of pairs
-      @helpers[k] = scoped(v)
+      @helpers[k] = scoped v
 
   postrender: (pairs) ->
-    jquery = require 'jquery'
+    jquery = jquery || require 'jquery'
     for k, v of pairs
-      @postrenders[k] = scoped(v)
+      @postrenders[k] = scoped v
 
   at: (pairs) ->
-    io = require 'socket.io'
+    io = io || require 'socket.io'
     for k, v of pairs
-      @socket_handlers[k] = new MessageHandler(v, @)
+      @socket_handlers[k] = new MessageHandler v, @
 
   msg: (pairs) ->
-    io = require 'socket.io'
+    io = io || require 'socket.io'
     for k, v of pairs
-      @msg_handlers[k] = new MessageHandler(v, @)
+      @msg_handlers[k] = new MessageHandler v, @
 
   layout: (arg) ->
-    pairs = if typeof arg is 'object' then arg else {default: arg}
-    coffeekup = require 'coffeekup'
+    pairs = if typeof arg is 'object' then arg else { default: arg }
+    coffeekup = coffeekup || require 'coffeekup'
     for k, v of pairs
       @layouts[k] = v
 
   view: (arg) ->
-    pairs = if typeof arg is 'object' then arg else {default: arg}
-    coffeekup = require 'coffeekup'
+    pairs = if typeof arg is 'object' then arg else { default: arg }
+    coffeekup = coffeekup || require 'coffeekup'
     for k, v of pairs
       @views[k] = v
 
   client: (arg) ->
-    pairs = if typeof arg is 'object' then arg else {default: arg}
+    pairs = if typeof arg is 'object' then arg else { default: arg }
     for k, v of pairs
       do (k, v) =>
         code = ";(#{v})();"
@@ -154,7 +154,7 @@ class App
           res.send code
 
   style: (arg) ->
-    pairs = if typeof arg is 'object' then arg else {default: arg}
+    pairs = if typeof arg is 'object' then arg else { default: arg }
     for k, v of pairs
       do (k, v) =>
         @http_server.get "/#{k}.css", (req, res) ->
