@@ -23,18 +23,18 @@ It is heavily influenced by [that legendary framework](http://www.sinatrarb.com)
 ### Notes 'bout the fork
 
 #### Fixed issues from Zappa's tracker:
-- https://github.com/mauricemach/zappa/issues#issue/3
-- https://github.com/mauricemach/zappa/issues#issue/6
-- https://github.com/mauricemach/zappa/issues#issue/25
-- https://github.com/mauricemach/zappa/issues#issue/31
+- <https://github.com/mauricemach/zappa/issues#issue/3>
+- <https://github.com/mauricemach/zappa/issues#issue/6>
+- <https://github.com/mauricemach/zappa/issues#issue/25>
+- <https://github.com/mauricemach/zappa/issues#issue/31>
 
 #### Features added:
 - Project-wide `config` object and a ways to access it throughout the code
 - `render 'note', apply: ['setup_title', 'highlite']` works as you'd expect
-- New flag `-g` for Zappa binary adding [Growl](http://growl.info) (useful with -w)
+- New flag `-g` for Zappa binary adding [Growl](http://growl.info) support (useful with -w)
 
 #### Other:
-- Split and modularized `lib/zappa.coffee`
+- Split and modularized `lib/zappa.coffee` - it was way too big for my taste!
 - Now compatible with Express v2.0 (exclusively i guess)
 
 ### Hi, World
