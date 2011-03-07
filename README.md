@@ -1,12 +1,12 @@
-    8888888888P        d8888 8888888b.  8888888b.     d8888          @@@    @@@        
-          d88P        d88888 888   Y88b 888   Y88b   d88888        @@@@@@@@@@@@@@          
-         d88P        d88P888 888    888 888    888  d88P888       @@@@@@@@@@@@@@@@           
-        d88P        d88P 888 888   d88P 888   d88P d88P 888      @@@@@@@@  @@@@@@@@            
-       d88P        d88P  888 8888888P"  8888888P" d88P  888      @@@            @@@             
-      d88P        d88P   888 888        888      d88P   888      @@   @@@@@@@@   @@             
-     d88P        d8888888888 888        888     d8888888888           @@@@@@@@                  
-    d8888888888 d88P     888 888        888    d88P     888            @@@@@@                           
-             
+    8888888888P        d8888 8888888b.  8888888b.     d8888          @@@    @@@
+          d88P        d88888 888   Y88b 888   Y88b   d88888        @@@@@@@@@@@@@@
+         d88P        d88P888 888    888 888    888  d88P888       @@@@@@@@@@@@@@@@
+        d88P        d88P 888 888   d88P 888   d88P d88P 888      @@@@@@@@  @@@@@@@@
+       d88P        d88P  888 8888888P"  8888888P" d88P  888      @@@            @@@
+      d88P        d88P   888 888        888      d88P   888      @@   @@@@@@@@   @@
+     d88P        d8888888888 888        888     d8888888888           @@@@@@@@
+    d8888888888 d88P     888 888        888    d88P     888            @@@@@@
+
 
 ### Razor-sharp DSL for modern web apps
 
@@ -19,6 +19,23 @@ Zappa is a [CoffeeScript](http://coffeescript.org) DSLish layer on top of [Expre
 It is heavily influenced by [that legendary framework](http://www.sinatrarb.com) named after another awesome Frank, with also a hint of [Camping](http://camping.rubyforge.org/).
 
 **Put on your helmet!** Zappa is barely past the proof of concept stage and things are loosely placed. Don't use it to control your nuclear launch facility just yet. All examples work though, and if you come with a spirit of adventure, you shall be rewarded.
+
+### Notes 'bout the fork
+
+#### Fixed issues from Zappa's tracker:
+- https://github.com/mauricemach/zappa/issues#issue/3
+- https://github.com/mauricemach/zappa/issues#issue/6
+- https://github.com/mauricemach/zappa/issues#issue/25
+- https://github.com/mauricemach/zappa/issues#issue/31
+
+#### Features added:
+- Project-wide `config` object and a ways to access it throughout the code
+- `render 'note', apply: ['setup_title', 'highlite']` works as you'd expect
+- New flag `-g` for Zappa binary adding [Growl](http://growl.info) (useful with -w)
+
+#### Other:
+- Split and modularized `lib/zappa.coffee`
+- Now compatible with Express v2.0 (exclusively i guess)
 
 ### Hi, World
 
@@ -309,7 +326,7 @@ First install soda from [npm](http://npmjs.org/)
 Before the tests can be run, the [Selenium RC](http://seleniumhq.org/projects/remote-control/) daemon must be running...
 
     java -jar selenium-server.jar
-  
+
 You can get the Selenium RC from http://selenium.googlecode.com/files/selenium-remote-control-1.0.3.zip.
 
 Once it's running, simply launch the automated tests:
